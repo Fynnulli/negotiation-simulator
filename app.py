@@ -13,10 +13,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from utils.simulator import simulate_negotiation
 from utils.prompt_loader import available_agents
-from utils.llm_client import LLMClient
+from utils.llm_client import get_client, list_providers
 
 
-def check_setup() -> bool:
+def check_setup(provider: str) -> bool:
     """Check if project is properly set up."""
     required_dirs = ["agents", "prompts", "utils"]
     for dir_name in required_dirs:
@@ -25,9 +25,12 @@ def check_setup() -> bool:
             return False
     
     try:
-        _ = LLMClient()
+        _ = get_client(provider=provider)
     except ValueError as e:
-        st.error(f"❌ API Configuration Error:\n{str(e)}\n\nCreate a `.env` file with OPENAI_API_KEY.")
+        st.error(
+            f"❌ API Configuration Error:\n{str(e)}\n\n"
+            "Create a `.env` file with proper API keys."
+        )
         return False
     
     return True
@@ -47,10 +50,6 @@ def main():
     Each agent has a different style: cooperative, hard-bargaining, skeptical, or analytical.
     """)
     
-    # Verify setup
-    if not check_setup():
-        st.stop()
-    
     # Sidebar configuration
     st.sidebar.header("⚙️ Configuration")
     opponent_type = st.sidebar.selectbox(
@@ -58,7 +57,18 @@ def main():
         options=available_agents(),
         help="Choose which negotiation opponent to face"
     )
-    
+
+    llm_provider = st.sidebar.selectbox(
+        "LLM Provider",
+        options=list_providers(),
+        index=0,
+        help="Choose which AI model to use for opponent responses"
+    )
+
+    # Verify setup after provider is selected
+    if not check_setup(provider=llm_provider):
+        st.stop()
+
     st.sidebar.markdown("---")
     st.sidebar.markdown("""
     ### How it works:
@@ -148,7 +158,8 @@ def main():
                     counterparty=counterparty,
                     tone=tone,
                     opponent_type=opponent_type,
-                    your_opening=your_opening
+                    your_opening=your_opening,
+                    provider=llm_provider
                 )
             except Exception as e:
                 st.error(f"❌ Simulation failed: {str(e)}")
@@ -180,6 +191,7 @@ def main():
         
         with tab2:
             st.subheader(f"Negotiation with {result['negotiation']['agent_role']}")
+            st.caption(f"Provider: {result.get('provider', 'default').upper()}")
             
             st.markdown("**Your Opening Statement:**")
             st.info(result["negotiation"]["your_opening"])

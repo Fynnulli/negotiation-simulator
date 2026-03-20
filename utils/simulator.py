@@ -1,8 +1,9 @@
 """Core negotiation simulation engine."""
 
-from typing import Dict, Any
-from utils.prompt_loader import load_agent, load_prompt, get_agent_behavior, get_feedback_structure
+from typing import Any, Dict, Optional
+
 from utils.llm_client import get_client
+from utils.prompt_loader import get_agent_behavior, load_agent, load_prompt
 
 
 def build_scenario(
@@ -11,15 +12,12 @@ def build_scenario(
     baseline: str,
     batna: str,
     counterparty: str,
-    tone: str
+    tone: str,
 ) -> Dict[str, Any]:
-    """
-    Build a structured negotiation scenario from user input.
-    
-    Uses the scenario_builder prompt to format input into LLM-readable format.
-    """
-    scenario_prompt = load_prompt("scenario_builder")
-    
+    """Build a structured negotiation scenario from user input."""
+    # Ensure the scenario builder prompt exists and is loadable.
+    _ = load_prompt("scenario_builder")
+
     user_input = f"""
 Topic: {topic}
 Your Goal: {goal}
@@ -28,7 +26,7 @@ BATNA (walkaway): {batna}
 Counterparty Description: {counterparty}
 Context/Tone: {tone}
 """
-    
+
     return {
         "topic": topic,
         "goal": goal,
@@ -36,32 +34,23 @@ Context/Tone: {tone}
         "batna": batna,
         "counterparty": counterparty,
         "tone": tone,
-        "raw_input": user_input.strip()
+        "raw_input": user_input.strip(),
     }
 
 
 def run_negotiation(
     scenario: Dict[str, Any],
     opponent_type: str,
-    your_opening: str
+    your_opening: str,
+    provider: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """
-    Simulate a negotiation turn.
-    
-    Args:
-        scenario: Structured scenario from build_scenario()
-        opponent_type: "cooperative", "hardball", "skeptical", or "analytical"
-        your_opening: Your opening statement/offer
-    
-    Returns: Dict with opponent_response and full_conversation
-    """
+    """Simulate a single-turn negotiation response from the selected opponent."""
     opponent_agent = load_agent(opponent_type)
-    
-    # Build the negotiation prompt
+
     agent_role = opponent_agent.get("meta", {}).get("role", opponent_type)
     agent_tone = opponent_agent.get("meta", {}).get("tone", "")
     behavior = get_agent_behavior(opponent_agent)
-    
+
     system_prompt = f"""
 You are a {agent_role} in a negotiation.
 
@@ -75,7 +64,7 @@ Topic: {scenario['topic']}
 Counterparty: {scenario['counterparty']}
 Context: {scenario['tone']}
 """
-    
+
     negotiation_prompt = f"""
 The user is proposing the following in a negotiation:
 
@@ -83,14 +72,14 @@ The user is proposing the following in a negotiation:
 
 Please respond as the {agent_role}. Your response should be natural, authentic, and reflect your negotiation style and objectives. Keep your response to 100-150 words.
 """
-    
-    client = get_client()
+
+    client = get_client(provider=provider)
     opponent_response = client.generate(
         prompt=negotiation_prompt,
         system_prompt=system_prompt,
-        max_tokens=500
+        max_tokens=500,
     )
-    
+
     return {
         "opponent_type": opponent_type,
         "agent_role": agent_role,
@@ -98,25 +87,22 @@ Please respond as the {agent_role}. Your response should be natural, authentic, 
         "opponent_response": opponent_response,
         "conversation": [
             {"role": "user", "content": your_opening},
-            {"role": "opponent", "content": opponent_response}
-        ]
+            {"role": "opponent", "content": opponent_response},
+        ],
     }
 
 
 def run_reflection(
     scenario: Dict[str, Any],
-    negotiation_result: Dict[str, Any]
+    negotiation_result: Dict[str, Any],
+    provider: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """
-    Run reflection/analysis on a completed negotiation.
-    
-    Analyzes the negotiation and provides structured feedback.
-    """
+    """Generate structured reflection feedback for the negotiation."""
     reflection_agent = load_agent("reflection")
-    feedback_template = load_prompt("feedback_template")
-    
+    _ = load_prompt("feedback_template")
+
     agent_role = reflection_agent.get("meta", {}).get("role", "Reflection Agent")
-    
+
     system_prompt = f"""
 You are a {agent_role} analyzing a completed negotiation.
 
@@ -130,7 +116,7 @@ Your job is to provide structured, educational feedback on:
 
 Be balanced, specific, and constructive. Focus on learning.
 """
-    
+
     reflection_prompt = f"""
 Please analyze this negotiation:
 
@@ -154,18 +140,15 @@ Provide structured feedback covering:
 
 Keep feedback under 400 words. Be specific and actionable.
 """
-    
-    client = get_client()
+
+    client = get_client(provider=provider)
     reflection_output = client.generate(
         prompt=reflection_prompt,
         system_prompt=system_prompt,
-        max_tokens=700
+        max_tokens=700,
     )
-    
-    return {
-        "reflection": reflection_output,
-        "structure": "See feedback sections above"
-    }
+
+    return {"reflection": reflection_output, "structure": "See feedback sections above"}
 
 
 def simulate_negotiation(
@@ -176,22 +159,18 @@ def simulate_negotiation(
     counterparty: str,
     tone: str,
     opponent_type: str,
-    your_opening: str
+    your_opening: str,
+    provider: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """
-    Complete negotiation simulation pipeline.
-    
-    Orchestrates: scenario building → opponent negotiation → reflection
-    
-    Returns: Complete simulation result with all stages
-    """
+    """Run the full pipeline: scenario -> negotiation -> reflection."""
     scenario = build_scenario(topic, goal, baseline, batna, counterparty, tone)
-    negotiation = run_negotiation(scenario, opponent_type, your_opening)
-    reflection = run_reflection(scenario, negotiation)
-    
+    negotiation = run_negotiation(scenario, opponent_type, your_opening, provider=provider)
+    reflection = run_reflection(scenario, negotiation, provider=provider)
+
     return {
         "scenario": scenario,
         "negotiation": negotiation,
         "reflection": reflection,
-        "success": True
+        "provider": provider or "default",
+        "success": True,
     }

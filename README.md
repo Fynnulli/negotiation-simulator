@@ -4,13 +4,7 @@ A local, AI-powered prototype for negotiation preparation and practice. Practice
 
 ## Features
 
-- 🤝 **Multiple Opponent Types**: Cooperative (win-win), Hardball (aggressive), Skeptical (cautious), Analytical (data-driven)
-- 💬 **Single-Turn Simulation**: Make an opening proposal, receive response, get feedback
-- 📊 **Structured Scenario Building**: Convert your negotiation context into a clear scenario
-- 📈 **Intelligent Feedback**: Post-simulation reflection on strategy, communication, and outcomes
-- 🔧 **Markdown-Based Agent Definitions**: Easy to understand and modify agent behavior
-- 🚀 **Streamlit UI**: Simple, interactive web interface
-- 🔐 **Local Only**: All computation happens locally with your API keys
+- 🔌 **Multiple LLM Providers**: Support for OpenAI (GPT-4), Anthropic (Claude), and Google (Gemini)
 
 ## Setup
 
@@ -158,7 +152,47 @@ OPENAI_MODEL=gpt-4                   # Model to use (default: gpt-4)
 OPENAI_TEMPERATURE=0.7               # Sampling temperature (0.0-1.0)
 STREAMLIT_SERVER_PORT=8501           # Streamlit port (optional)
 ```
+Create a `.env` file (copy from `.env.example`):
 
+```env
+# Select which provider to use (default: openai)
+LLM_PROVIDER=openai  # Options: openai, claude, gemini
+
+# OpenAI (GPT-4)
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4
+
+# Anthropic Claude
+ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_MODEL=claude-3-opus-20240229
+
+# Google Gemini
+GOOGLE_API_KEY=your-key-here
+GOOGLE_MODEL=gemini-pro
+
+# Optional
+OPENAI_TEMPERATURE=0.7
+STREAMLIT_SERVER_PORT=8501
+```
+
+### Supported LLM Providers
+
+The simulator supports three major LLM providers:
+
+#### OpenAI (GPT-4)
+- **Model**: `gpt-4` (or `gpt-3.5-turbo` for faster, lower-cost option)
+- **Setup**: Get API key from https://platform.openai.com/api-keys
+- **Set in .env**: `LLM_PROVIDER=openai`
+
+#### Anthropic (Claude)
+- **Model**: `claude-3-opus-20240229` (highest-performance), `claude-3-sonnet-20240229` (balanced), `claude-3-haiku-20240307` (fast)
+- **Setup**: Get API key from https://console.anthropic.com/
+- **Set in .env**: `LLM_PROVIDER=claude`
+
+#### Google (Gemini)
+- **Model**: `gemini-pro` (recommended)
+- **Setup**: Get API key from https://makersuite.google.com/app/apikey
+- **Set in .env**: `LLM_PROVIDER=gemini`
 ## Customization
 
 ### Modifying Agent Behavior
@@ -168,6 +202,25 @@ Edit the Markdown files in `agents/`:
 - Change role, tone, objectives, constraints, or behavior guidelines
 - The simulator will use the updated behavior on next run
 
+### Switching LLM Providers
+
+**Option 1: Environment Variable (Recommended)**
+Edit `.env` and change `LLM_PROVIDER`:
+```env
+LLM_PROVIDER=claude  # Switch to Claude
+# OR
+LLM_PROVIDER=gemini  # Switch to Gemini
+```
+
+**Option 2: UI Selection**
+The Streamlit app sidebar includes a dropdown to select the LLM provider on-the-fly without restarting.
+
+**Feature Comparison**:
+| Provider | Speed | Cost | Quality | Best For |
+|----------|-------|------|---------|----------|
+| OpenAI (GPT-4) | Medium | Higher | Excellent | General purpose, proven |
+| Claude | Medium | Medium | Excellent | Long context, nuanced responses |
+| Gemini | Fast | Lower | Good | Quick iterations, cost-conscious |
 ### Creating a New Agent Type
 
 1. Create `agents/opponent_<name>.md` with YAML frontmatter:
@@ -203,9 +256,18 @@ Edit the Markdown files in `agents/`:
 Ensure you're running the app from the project root directory.
 
 ### "API Configuration Error"
+@@Check that `.env` exists
+@@Verify the selected LLM_PROVIDER has a valid API key configured
+### "API Configuration Error"
 - Check that `.env` exists
 - Verify `OPENAI_API_KEY` is set and valid
 - Test your key at https://platform.openai.com/
+
+### Provider-Specific Issues
+
+**OpenAI**: Verify key at https://platform.openai.com/api-keys/keys  
+**Claude**: Verify key at https://console.anthropic.com/  
+**Gemini**: Verify key at https://makersuite.google.com/app/apikey
 
 ### "Module not found" errors
 - Ensure virtual environment is activated
