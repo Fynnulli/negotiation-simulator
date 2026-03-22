@@ -3,7 +3,12 @@
 from typing import Any, Dict, Optional
 
 from utils.llm_client import get_client
-from utils.prompt_loader import get_agent_behavior, load_agent, load_prompt
+from utils.prompt_loader import (
+    get_agent_behavior,
+    get_theory_basis,
+    load_agent,
+    load_prompt,
+)
 
 
 def build_scenario(
@@ -14,18 +19,17 @@ def build_scenario(
     counterparty: str,
     tone: str,
 ) -> Dict[str, Any]:
-    """Build a structured negotiation scenario from user input."""
-    # Ensure the scenario builder prompt exists and is loadable.
-    _ = load_prompt("scenario_builder")
+    """Build a structured negotiation scenario from user input.
 
-    user_input = f"""
-Topic: {topic}
-Your Goal: {goal}
-Your Baseline: {baseline}
-BATNA (walkaway): {batna}
-Counterparty Description: {counterparty}
-Context/Tone: {tone}
-"""
+    Maps to Lewicki et al. (2010) planning steps 1–7:
+      - topic       → Step 1: Defining the Issues
+      - goal        → Step 3: Defining Interests / Step 6: Targets
+      - baseline    → Step 4: Defining Resistance Points
+      - batna       → Step 5: Defining Alternatives (BATNA)
+      - counterparty→ Step 8: Analyzing the Other Party
+      - tone        → Step 7: Assessing Social Context
+    """
+    _ = load_prompt("scenario_builder")
 
     return {
         "topic": topic,
@@ -34,7 +38,14 @@ Context/Tone: {tone}
         "batna": batna,
         "counterparty": counterparty,
         "tone": tone,
-        "raw_input": user_input.strip(),
+        "raw_input": (
+            f"Topic: {topic}\n"
+            f"Your Goal: {goal}\n"
+            f"Your Baseline (Resistance Point): {baseline}\n"
+            f"BATNA (walkaway): {batna}\n"
+            f"Counterparty: {counterparty}\n"
+            f"Context / Tone: {tone}"
+        ),
     }
 
 
@@ -44,34 +55,52 @@ def run_negotiation(
     your_opening: str,
     provider: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Simulate a single-turn negotiation response from the selected opponent."""
-    opponent_agent = load_agent(opponent_type)
+    """Simulate a single-turn negotiation response from the selected opponent.
 
-    agent_role = opponent_agent.get("meta", {}).get("role", opponent_type)
-    agent_tone = opponent_agent.get("meta", {}).get("tone", "")
+    The system prompt includes:
+      - The agent's theoretical basis (e.g. distributive bargaining,
+        Harvard Concept) drawn from the theory_basis YAML field and the
+        Theoretical Basis markdown section.
+      - The agent's concrete Behavior Guidelines.
+
+    This ensures the LLM embodies both the scientific model and the
+    practical behavioral instructions.
+    """
+    opponent_agent = load_agent(opponent_type)
+    meta = opponent_agent.get("meta", {})
+
+    agent_role = meta.get("role", opponent_type)
+    agent_tone = meta.get("tone", "")
+    theory_basis = get_theory_basis(opponent_agent)
     behavior = get_agent_behavior(opponent_agent)
 
-    system_prompt = f"""
-You are a {agent_role} in a negotiation.
+    # Build theory header line for system prompt
+    theory_header = (
+        f"Theoretical basis: {theory_basis}\n" if theory_basis else ""
+    )
 
-Tone: {agent_tone}
+    system_prompt = f"""You are a {agent_role} in a negotiation simulation.
 
-Behavior Guidelines:
+{theory_header}Tone: {agent_tone}
+
 {behavior}
 
-Scenario:
+Scenario context:
 Topic: {scenario['topic']}
-Counterparty: {scenario['counterparty']}
-Context: {scenario['tone']}
+Counterparty (that's you): {scenario['counterparty']}
+Setting: {scenario['tone']}
 """
 
-    negotiation_prompt = f"""
-The user is proposing the following in a negotiation:
+    negotiation_prompt = f"""The user is making the following opening in a negotiation:
 
-{your_opening}
+\"\"\"{your_opening}\"\"\"
 
-Please respond as the {agent_role}. Your response should be natural, authentic, and reflect your negotiation style and objectives. Keep your response to 100-150 words.
-"""
+Respond as the {agent_role}. Your response must:
+- Authentically reflect your negotiation style, theoretical approach, and objectives
+- React to the specific content of their opening
+- Be 100–150 words maximum
+
+Do not break character or explain your strategy. Just negotiate."""
 
     client = get_client(provider=provider)
     opponent_response = client.generate(
@@ -83,6 +112,7 @@ Please respond as the {agent_role}. Your response should be natural, authentic, 
     return {
         "opponent_type": opponent_type,
         "agent_role": agent_role,
+        "theory_basis": theory_basis,
         "your_opening": your_opening,
         "opponent_response": opponent_response,
         "conversation": [
@@ -97,58 +127,69 @@ def run_reflection(
     negotiation_result: Dict[str, Any],
     provider: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Generate structured reflection feedback for the negotiation."""
+    """Generate structured reflection feedback grounded in negotiation theory.
+
+    Feedback is structured around:
+      - The four Harvard Principles (Fisher & Ury, 1981)
+      - BATNA awareness (Lewicki et al., 2010, S. 125 f.)
+      - Strategy-opponent fit
+    """
     reflection_agent = load_agent("reflection")
     _ = load_prompt("feedback_template")
 
-    agent_role = reflection_agent.get("meta", {}).get("role", "Reflection Agent")
+    agent_role = reflection_agent.get("meta", {}).get("role", "Negotiation Analyst")
+    opponent_theory = negotiation_result.get("theory_basis", "")
 
-    system_prompt = f"""
-You are a {agent_role} analyzing a completed negotiation.
+    system_prompt = f"""You are a {agent_role} evaluating a negotiation simulation.
 
-Your job is to provide structured, educational feedback on:
-1. How well the user achieved their goal
-2. Strategy effectiveness
-3. Communication quality
-4. Relationship building
-5. Key moments and turning points
-6. Development opportunities
+Your feedback framework is grounded in:
+- The four Harvard Principles (Fisher & Ury, 1981):
+    1. Separate people from the problem
+    2. Focus on interests, not positions
+    3. Invent options for mutual gain
+    4. Insist on objective criteria
+- BATNA awareness (Lewicki et al., 2010, S. 125 f.)
+- Strategy-opponent fit: the opponent used {opponent_theory or 'a standard negotiation approach'}
 
-Be balanced, specific, and constructive. Focus on learning.
+Be specific, balanced, and actionable. Reference theory where relevant.
 """
 
-    reflection_prompt = f"""
-Please analyze this negotiation:
+    reflection_prompt = f"""Analyze this negotiation:
 
 GOAL: {scenario['goal']}
-BASELINE: {scenario['baseline']}
+RESISTANCE POINT (baseline): {scenario['baseline']}
 BATNA: {scenario['batna']}
 
 USER'S OPENING:
 {negotiation_result['your_opening']}
 
-OPPONENT RESPONSE:
+OPPONENT RESPONSE ({negotiation_result['agent_role']}):
 {negotiation_result['opponent_response']}
 
-Provide structured feedback covering:
-1. Outcome vs. goal
-2. Strategy used and effectiveness
-3. Communication quality
-4. Relationship dynamics
-5. Key turning points
-6. Development opportunity (highest impact)
+Structure your feedback across these sections:
+1. Outcome vs. Goal
+2. Harvard Principle 1 — People vs. Problem
+3. Harvard Principle 2 — Interests vs. Positions
+4. Harvard Principle 3 — Options for Mutual Gain
+5. Harvard Principle 4 — Objective Criteria
+6. BATNA Awareness
+7. Strategy-Opponent Fit
+8. Key Turning Point
+9. Development Priority (one concrete next step)
 
-Keep feedback under 400 words. Be specific and actionable.
-"""
+Keep total feedback under 500 words. Be specific — quote or paraphrase the user's actual words."""
 
     client = get_client(provider=provider)
     reflection_output = client.generate(
         prompt=reflection_prompt,
         system_prompt=system_prompt,
-        max_tokens=700,
+        max_tokens=900,
     )
 
-    return {"reflection": reflection_output, "structure": "See feedback sections above"}
+    return {
+        "reflection": reflection_output,
+        "framework": "Harvard Concept (Fisher & Ury, 1981) + Lewicki et al. (2010)",
+    }
 
 
 def simulate_negotiation(
@@ -162,7 +203,7 @@ def simulate_negotiation(
     your_opening: str,
     provider: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Run the full pipeline: scenario -> negotiation -> reflection."""
+    """Run the full pipeline: scenario → negotiation → reflection."""
     scenario = build_scenario(topic, goal, baseline, batna, counterparty, tone)
     negotiation = run_negotiation(scenario, opponent_type, your_opening, provider=provider)
     reflection = run_reflection(scenario, negotiation, provider=provider)
