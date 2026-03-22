@@ -1,122 +1,144 @@
 ---
 name: "feedback_template"
-description: "Post-negotiation reflection structure for analyzing outcomes and performance"
+description: "Post-negotiation reflection structured around Lewicki's planning
+  steps and the four Harvard Principles (Fisher & Ury, 1981)"
 ---
 
 # Feedback Template
 
 ## Purpose
 
-Provide structured, actionable feedback after a negotiation simulation is complete. Focus on learning and skill development, not blame.
+Provide structured, actionable feedback after a negotiation simulation.
+Evaluation criteria are grounded in two theoretical frameworks:
+
+- **Harvard Concept** (Fisher & Ury, 1981): four principles of
+  interest-based negotiation
+- **Lewicki et al. (2010)**: planning process and strategy effectiveness
+
+---
 
 ## Output Structure
 
 ```markdown
 # Negotiation Reflection: [Topic]
 
-## 1. Outcome Summary
+---
 
-**Your Original Goal**: [state it]
-**Outcome Achieved**: [what was actually agreed]
-**Gap Analysis**: [where outcome differs from goal]
+## 1. Outcome vs. Goal
 
-### Quantitative Scorecard
-| Metric | Goal | Achieved | Status |
-|--------|------|----------|--------|
-| [metric1] | [goal] | [result] | ✓/✗ |
-| [metric2] | [goal] | [result] | ✓/✗ |
+**Your stated goal**: [from scenario input]
+**Your BATNA**: [from scenario input]
+**Outcome achieved**: [based on opponent response]
+**Assessment**: Did the outcome exceed, meet, or fall below your
+  Resistance Point?
 
 ---
 
-## 2. Strategy Effectiveness
+## 2. Harvard Principle 1 — People vs. Problem
 
-**Strategy Used**: [e.g., "anchoring high, then gradual concessions"]
-**Appropriateness for Opponent**: [analytical/hardball/cooperative/skeptical]
-**Effectiveness**: [1-5 rating with reasoning]
+> "Separate the people from the problem." (Fisher & Ury, 1981)
 
-**What Worked**:
-- [Specific tactic that succeeded]
-- [Evidence of success]
-
-**What Didn't Work**:
-- [Tactic that stalled or backfired]
-- [Alternative approach in hindsight]
+**Observed**: Did you maintain a constructive tone while advancing
+  your substantive position?
+**Strength**: [specific moment where this worked]
+**Opportunity**: [moment where personal and substantive got mixed]
 
 ---
 
-## 3. Communication Quality
+## 3. Harvard Principle 2 — Interests vs. Positions
 
-**Listening**: How well did you understand the other side's interests?
-- Evidence: [specific moment where you listened/didn't listen]
+> "Focus on interests, not positions." (Fisher & Ury, 1981)
 
-**Clarity**: Were your positions and reasoning clearly explained?
-- Strength: [clear communication instance]
-- Opportunity: [where you could have been clearer]
-
-**Empathy**: Did you acknowledge their constraints and concerns?
-- Example: [moment of validation / missed opportunity]
+**Observed**: Did your opening address the *why* behind your demands,
+  or did it stay at the level of stated positions?
+**Strength**: [if interests were communicated]
+**Opportunity**: [if only positions were stated — what interest could
+  have been surfaced?]
 
 ---
 
-## 4. Relationship Dynamics
+## 4. Harvard Principle 3 — Options for Mutual Gain
 
-**Tone**: [Professional / Cooperative / Tense / Adversarial]
-**Trust Development**: [Increased / Stayed neutral / Decreased]
+> "Invent options for mutual gain." (Fisher & Ury, 1981)
 
-**Critical Moments**:
-1. [What shifted the relationship positively or negatively?]
-2. [How did opponent respond to your tone?]
-
----
-
-## 5. Key Turning Points
-
-**Moment 1**: [Description]
-- Impact: [What changed after this moment]
-
-**Moment 2**: [Description]
-- Impact: [What changed after this moment]
+**Observed**: Did you propose or invite creative solutions that could
+  expand value for both parties?
+**Strength**: [integrative move, if made]
+**Opportunity**: [where a package or trade-off could have been offered]
 
 ---
 
-## 6. Development Areas
+## 5. Harvard Principle 4 — Objective Criteria
 
-### Highest Impact Opportunity
-**Area**: [communication / strategy / preparation / adaptability]
-**Current State**: [what happened]
-**Future Approach**: [what to try next time]
-**Practice**: [specific exercise or next scenario to work on this]
+> "Insist on using objective criteria." (Fisher & Ury, 1981)
 
-### Secondary Opportunity
-**Area**: [specific skill]
-**Suggestion**: [actionable improvement]
+**Observed**: Did you anchor your proposals in external, verifiable
+  standards (market rates, benchmarks, precedent)?
+**Strength**: [if objective criteria were used]
+**Opportunity**: [where a legitimizing standard could have strengthened
+  the argument]
 
 ---
 
-## 7. Wins to Celebrate
+## 6. BATNA Awareness (Lewicki et al., 2010, S. 125 f.)
 
-- [Specific success to acknowledge]
-- [Strength demonstrated]
-- [Progress from previous simulations]
+**Your BATNA**: [from input]
+**Was it visible in your strategy?** Did you negotiate with the
+  confidence of someone who knows their walkaway?
+**Assessment**: Strong BATNA awareness / Weak BATNA awareness /
+  BATNA not reflected in approach
 
 ---
 
-## 8. Next Steps
+## 7. Strategy-Opponent Fit
 
-**For Next Negotiation**:
-1. [Priority preparation]
-2. [Strategy adjustment]
-3. [Communication focus]
+**Opponent type**: [cooperative / hardball / skeptical / analytical]
+**Strategy used**: [e.g., interest-based, positional, data-led]
+**Fit assessment**: Was the chosen strategy appropriate for this
+  opponent type?
 
-**For Skill Building**:
-- Recommended next opponent type: [cooperative/hardball/skeptical/analytical]
-- Focus scenario: [e.g., "increase comfort with silence/objections"]
+| Opponent     | Effective strategy                          |
+|--------------|---------------------------------------------|
+| Cooperative  | Interest-based, open information sharing    |
+| Hardball     | Firm anchoring, BATNA signaling, patience   |
+| Skeptical    | Evidence-heavy, phased commitments          |
+| Analytical   | Data-led, Bargaining Mix awareness          |
+
+**Observed fit**: [good fit / mismatch — explain why]
+
+---
+
+## 8. Key Turning Point
+
+**What happened**: [specific moment that shifted the negotiation]
+**Impact**: [how it changed the dynamic]
+**Alternative**: [what a different move could have achieved]
+
+---
+
+## 9. Development Priority
+
+**Highest-impact area**: [one of: interest articulation /
+  objective criteria / BATNA leverage / opponent adaptation /
+  creative options]
+**Current state**: [what was observed]
+**Next step**: [concrete action for next simulation]
+
+---
+
+## 10. What Worked
+
+- [Specific strength to acknowledge]
+- [Skill demonstrated effectively]
 ```
+
+---
 
 ## Feedback Principles
 
-1. **Specific**: Reference exact moments, not generalizations
-2. **Balanced**: Acknowledge strengths before highlighting opportunities
-3. **Actionable**: Suggest concrete next steps, not vague improvements
-4. **Growth-Oriented**: Frame all feedback as learning, not judgment
-5. **Observable**: Base feedback on what happened, not assumptions about intent
+1. **Theory-grounded**: Every major assessment references a specific
+   concept from Fisher & Ury (1981) or Lewicki et al. (2010)
+2. **Specific**: Quote or paraphrase actual moments from the simulation
+3. **Balanced**: Acknowledge strengths before opportunities
+4. **Actionable**: Each opportunity includes a concrete next step
+5. **Observable**: Base feedback on what was said, not assumed intent
