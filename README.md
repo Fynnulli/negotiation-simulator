@@ -39,13 +39,23 @@ A local, AI-powered prototype for negotiation preparation and practice. Practice
      OPENAI_MODEL=gpt-4
      ```
 
-### Running the Simulator
+## Two Ways to Use the Simulator
 
+### Option A — Claude.ai Project (Recommended)
+1. Open [claude.ai/projects](https://claude.ai/projects)
+2. Create a new Project
+3. Paste the full content of `claude_interface.md` as the Project
+   System Prompt
+4. Start chatting — type `START` to begin a simulation
+
+No API key, no terminal, no hosting required.
+
+### Option B — Local Streamlit (Legacy)
+If you want to run the original Streamlit interface locally:
 ```bash
-streamlit run app.py
+streamlit run app_legacy.py
 ```
-
-The app will open at `http://localhost:8501`
+(Requires API key in `.env`)
 
 ## Usage
 
