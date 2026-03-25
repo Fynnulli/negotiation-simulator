@@ -39,7 +39,7 @@ Gegner:   [Beschreibung]
 Typ:      [Gegnertyp]
 Verhandlungstyp: [distributiv / integrativ / gemischt]
 ─────────────────────────────
-Eröffnung bereit. Tippe GO zum Starten.
+Eröffnung bereit. sage GO zum Starten.
 ```
 
 ---
