@@ -8,7 +8,7 @@ läuft vollständig über Claude Code — kein Frontend, kein Framework.
 
 ## Workflow: Drei Phasen
 
-### Phase 1 — Vorbereitung (`/start`)
+### Phase 1 — Vorbereitung
 Lade `agents/preparation.md` und führe den Nutzer interaktiv durch
 alle 9 implementierten Vorbereitungsschritte nach Lewicki et al. (2010,
 S. 119 ff.). Schritt 10 (Protocol) ist bewusst ausgeklammert (MVP-Scope).
@@ -18,29 +18,31 @@ Speichere das Ergebnis als:
 
 Diese Datei ist Pflicht-Input für Phase 2.
 
-### Phase 2 — Simulation (`/simulate`)
+### Phase 2 — Simulation
 1. Frage den Nutzer welchen Gegnertyp er simulieren möchte
 2. Lade den entsprechenden `agents/opponent_*.md`
 3. Lade die zuletzt erstellte `outputs/preparation_*.md` als Kontext
 4. Führe die Verhandlungssimulation durch (multi-turn)
-5. Der Nutzer beendet mit `/done`
+5. Der Nutzer beendet die Simulation mit "Simulation beenden"
 
-### Phase 3 — Feedback (`/feedback`)
+### Phase 3 — Feedback
 Lade `agents/coach.md` und übergib den vollständigen
 Simulationsverlauf sowie den preparation output.
 Erzeuge strukturiertes Feedback nach den Harvard-Prinzipien.
 
 ---
 
-## Verfügbare Befehle
+## Wie du die Phasen startest
 
-| Befehl | Aktion |
-|--------|--------|
-| `/start` | Startet Phase 1 — Vorbereitung |
-| `/simulate` | Startet Phase 2 — setzt preparation output voraus |
-| `/feedback` | Startet Phase 3 — setzt Simulationsverlauf voraus |
-| `/agents` | Listet verfügbare Gegnertypen mit kurzer Beschreibung |
-| `/done` | Beendet die laufende Simulation und leitet zu Phase 3 |
+Schreib Claude Code in natürlicher Sprache — keine Slash-Befehle nötig:
+
+| Was du schreibst | Was passiert |
+|-----------------|--------------|
+| "Starte die Vorbereitung" | Phase 1 — preparation.md wird geladen |
+| "Starte die Simulation mit Hardball" | Phase 2 — opponent_hardball.md + letzter preparation output |
+| "Gib mir Feedback" | Phase 3 — coach.md analysiert den Verlauf |
+| "Welche Gegnertypen gibt es?" | Listet alle Agenten mit Beschreibung |
+| "Simulation beenden" | Beendet Phase 2 und leitet zu Phase 3 |
 
 ---
 
