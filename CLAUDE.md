@@ -39,9 +39,9 @@ Schreib Claude Code in natürlicher Sprache — keine Slash-Befehle nötig:
 | Was du schreibst | Was passiert |
 |-----------------|--------------|
 | "Starte die Vorbereitung" | Phase 1 — preparation.md wird geladen |
-| "Starte die Simulation mit Hardball" | Phase 2 — opponent_hardball.md + letzter preparation output |
+| "Starte die Simulation mit dem distributiven Gegner" | Phase 2 — opponent_distributive.md + letzter preparation output |
+| "Starte die Simulation mit dem integrativen Gegner" | Phase 2 — opponent_integrative.md + letzter preparation output |
 | "Gib mir Feedback" | Phase 3 — coach.md analysiert den Verlauf |
-| "Welche Gegnertypen gibt es?" | Listet alle Agenten mit Beschreibung |
 | "Simulation beenden" | Beendet Phase 2 und leitet zu Phase 3 |
 
 ---
@@ -50,10 +50,11 @@ Schreib Claude Code in natürlicher Sprache — keine Slash-Befehle nötig:
 
 | Agent | Strategie | Theoretische Basis |
 |-------|-----------|--------------------|
-| `opponent_hardball` | Distributiv | Lewicki et al. (2010), Kap. 2–3 |
-| `opponent_cooperative` | Integrativ | Fisher & Ury (1981); Lewicki et al. (2010), Kap. 4 |
-| `opponent_skeptical` | Gemischt | Lewicki et al. (2010), S. 131 ff. |
-| `opponent_analytical` | Integrativ/gemischt | Lewicki et al. (2010), S. 123 f. |
+| `opponent_distributive` | Distributiv | Lewicki et al. — Distributive Bargaining |
+| `opponent_integrative` | Integrativ | Fisher & Ury — Harvard-Konzept; Lewicki et al. — Integrative Negotiation |
+
+Der Kommunikationsstil des Gegners wird automatisch aus dem preparation
+output geladen (Schritt 8) und in den jeweiligen Agenten eingespeist.
 
 ---
 

@@ -54,3 +54,6 @@ htmlcov/
 
 # Legacy UI
 app_legacy.py
+
+# Quellen
+/Quellen

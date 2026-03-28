@@ -123,18 +123,16 @@ von dieser Einigung.
 
 Hat der Nutzer eine Strategie gewählt, die zum simulierten Gegnertyp
 passt? Lewicki et al. beschreiben das Negotiator's Dilemma: Zu kooperativ
-gegenüber einem Hardball-Gegner ist riskant; zu kompetitiv gegenüber
-einem Cooperative-Gegner zerstört integrative Potenziale
+gegenüber einem distributiven Gegner ist riskant; zu kompetitiv gegenüber
+einem integrativen Gegner zerstört integrative Potenziale
 (Lewicki et al., 2010, S. 122 f.).
 
 Bewertungsmatrix:
 
-| Gegnertyp | Effektive Strategie |
-|-----------|---------------------|
-| Hardball | Festes Anchoring, BATNA-Signaling, Geduld, keine Informationspreisgabe |
-| Cooperative | Interessenbasiert, Informationsaustausch, Paketlösungen |
-| Skeptical | Belege liefern, Vertrauen aufbauen, phasenweise Commitments |
-| Analytical | Datengestützte Argumente, Bargaining Mix adressieren |
+| Gegnertyp | Effektive Strategie des Nutzers |
+|-----------|----------------------------------|
+| Distributiv | Festes Anchoring, BATNA-Signaling, Geduld, keine Informationspreisgabe |
+| Integrativ | Interessenbasiert, Informationsaustausch, Paketlösungen, objektive Kriterien |
 
 ---
 
