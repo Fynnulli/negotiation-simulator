@@ -1,6 +1,6 @@
 # Negotiation Simulator
 
-Ein KI-gestützter Prototyp zur Verhandlungsvorbereitung und -simulation — vollständig im Terminal, ohne App oder Framework.
+Ein KI-gestützter Prototyp zur Verhandlungsvorbereitung und -simulation — vollständig über Claude Code, ohne App oder Framework.
 
 ---
 
@@ -8,13 +8,13 @@ Ein KI-gestützter Prototyp zur Verhandlungsvorbereitung und -simulation — vol
 
 Drei Agenten, drei Phasen:
 
-1. **Preparation Agent** — führt interaktiv durch Lewickis Vorbereitungsschritte und speichert das Ergebnis als `.md`-Datei. Diese Datei ist gleichzeitig deine echte Verhandlungsvorbereitung für die Praxis und der Kontext-Input für die Simulation.
+1. **Preparation Agent** — führt interaktiv durch den 10-Schritt-Planungsprozess nach Lewicki et al. und speichert das Ergebnis als `.md`-Datei. Diese Datei ist gleichzeitig echte Verhandlungsvorbereitung für die Praxis und Kontext-Input für die Simulation.
 
-2. **Opponent Agents** — simulieren die Gegenseite auf Basis deiner Vorbereitung. Vier Typen, theoretisch verankert, austauschbar:
-   - **Hardball** — kompetitiv, maximiert eigene Gewinne, setzt unter Druck
-   - **Cooperative** — sucht Win-win, transparent, kooperativ
-   - **Skeptical** — vorsichtig, risikoavers, fordert Belege
-   - **Analytical** — datengetrieben, detailorientiert, logisch
+2. **Opponent Agents** — simulieren die Gegenseite auf Basis der Vorbereitung. Zwei Typen, direkt aus der Verhandlungstheorie hergeleitet:
+   - **Distributiver Verhandler** — positionsorientiert, Nullsummen-Logik, Anchoring, Zeitdruck (Lewicki et al.)
+   - **Integrativer Verhandler** — interessenbasiert, Win-Win-Logik, Harvard-Prinzipien (Fisher & Ury)
+   
+   Der Kommunikationsstil des Gegners wird aus der Vorbereitung (Schritt 8) geladen und in den jeweiligen Agenten eingespeist.
 
 3. **Coach Agent** — gibt nach der Simulation strukturiertes Feedback nach den vier Harvard-Prinzipien, BATNA-Nutzung und Strategie-Gegner-Fit.
 
@@ -34,16 +34,17 @@ Die Struktur ist so gebaut, dass daraus später ein **MCP-Server** oder eine **T
 
 ```
 1. Preparation Agent starten
-   → interaktive Vorbereitung nach Lewicki
+   → interaktive Vorbereitung nach Lewicki et al.
    → Ergebnis wird in outputs/ gespeichert
 
 2. Opponent Agent wählen
-   → Simulation auf Basis der Vorbereitung
+   → distributiv oder integrativ
+   → Kommunikationsstil aus Schritt 8 wird automatisch geladen
    → freie Verhandlung im Dialog
 
 3. Coach Agent starten
    → strukturiertes Feedback
-   → Harvard-Prinzipien, BATNA, Strategie-Fit
+   → Harvard-Prinzipien, BATNA-Awareness, Strategie-Gegner-Fit
 ```
 
 ---
@@ -56,31 +57,18 @@ negotiation-simulator/
 ├── README.md
 ├── .env.example
 ├── .gitignore
-├── requirements.txt
-├── python.instructions.md
-├── agents.instructions.md
 │
 ├── agents/
-│   ├── preparation.md                 # Preparation Agent
-│   ├── opponent_cooperative.md        # Opponent: kooperativ
-│   ├── opponent_hardball.md           # Opponent: kompetitiv
-│   ├── opponent_skeptical.md          # Opponent: skeptisch
-│   ├── opponent_analytical.md         # Opponent: analytisch
+│   ├── preparation.md                 # Preparation Agent (Lewicki 9 Schritte)
+│   ├── opponent_distributive.md       # Distributiver Verhandler
+│   ├── opponent_integrative.md        # Integrativer Verhandler
 │   └── coach.md                       # Coach Agent (Feedback)
 │
 ├── outputs/                           # Gespeicherte Vorbereitungen
 │   └── .gitkeep
 │
-├── data/
-│   └── sample_cases.json              # Beispiel-Szenarien
-│
-└── .github/
-    ├── copilot-instructions.md
-    ├── agents/
-    │   ├── planner.agent.md
-    │   └── builder.agent.md
-    └── prompts/
-        └── bootstrap-negotiation-prototype.prompt.md
+└── data/
+    └── sample_cases.json
 ```
 
 ---
@@ -99,6 +87,6 @@ cp .env.example .env
 
 ## Theoretischer Rahmen
 
-- **Vorbereitung**: Lewicki et al. — *Negotiation* (Interessen, Ziele, BATNA, Prioritäten)
+- **Vorbereitung**: Lewicki et al. — *Negotiation* (10-Schritt-Planungsprozess, BATNA, ZOPA, Bargaining Mix)
+- **Gegnertypen**: Lewicki et al. — distributive vs. integrative Verhandlungsführung
 - **Feedback**: Fisher & Ury — *Getting to Yes* (Harvard-Prinzipien)
-- **Opponent-Typen**: Verhandlungsstilmodelle (kompetitiv, kooperativ, analytisch, skeptisch)

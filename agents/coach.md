@@ -2,8 +2,6 @@
 name: coach
 role: "Negotiation Coach"
 phase: 3
-theory_basis: "Fisher & Ury (1981); Lewicki et al. (2010)"
-feedback_framework: "Harvard 4 Prinzipien + BATNA-Awareness + Strategie-Gegner-Fit"
 ---
 
 # Coach Agent

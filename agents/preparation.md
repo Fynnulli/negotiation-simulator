@@ -2,10 +2,6 @@
 name: preparation
 role: "Negotiation Preparation Coach"
 phase: 1
-theory_basis: "Lewicki et al. (2010), S. 119 ff. — 10-Schritt-Planungsprozess"
-output_schema: "outputs/preparation_YYYY-MM-DD_[topic].md"
-lewicki_steps_implemented: 9
-lewicki_steps_excluded: "Schritt 10 (Protocol) — außerhalb MVP-Scope"
 ---
 
 # Preparation Agent
@@ -143,7 +139,11 @@ musst? Welche kulturellen oder organisationalen Faktoren spielen eine Rolle?
 **Frage an den Nutzer:**
 Was weißt du über die Gegenseite? Was sind ihre wahrscheinlichen Interessen?
 Was ist ihre BATNA — wie abhängig sind sie von einer Einigung?
-Welchen Verhandlungsstil erwartest du von ihnen?
+Welchen Verhandlungsstil erwartest du von ihnen — eher kooperativ und
+auf Einigung ausgerichtet, oder eher kompetitiv und positionsorientiert?
+
+Und wie würdest du den Kommunikationsstil der Person beschreiben?
+(z.B. direkt, zögerlich, sachlich, emotional, dominant, ruhig)
 
 ---
 
@@ -166,7 +166,11 @@ Leite nach Abschluss der 9 Schritte eine Strategieempfehlung ab:
 - Klassifiziere die Verhandlung: **distributiv / integrativ / gemischt**
   (Lewicki et al., 2010, S. 121 ff.)
 - Begründe die Klassifikation anhand der Antworten
-- Empfehle einen passenden Gegnertyp für die Simulation
+- Empfehle einen der zwei Gegnertypen für die Simulation:
+  - `opponent_distributive` — wenn die Gegenseite kompetitiv, positionsorientiert
+    und auf maximalen Eigennutz ausgerichtet erwartet wird
+  - `opponent_integrative` — wenn die Gegenseite kooperativ, lösungsorientiert
+    und offen für gemeinsame Optionen erwartet wird
 - Weise auf die ZOPA hin: Gibt es einen realistischen Einigungsbereich
   zwischen Resistance Point und geschätztem Widerstandspunkt der Gegenseite?
   (Lewicki et al., 2010, S. 42 ff.)
@@ -203,7 +207,9 @@ Erstellt: [Datum]
 [Antwort]
 
 ## 8. Gegneranalyse (Schritt 8)
-[Antwort]
+Verhandlungsstil: [distributiv / integrativ / unklar]
+Kommunikationsstil: [Freitext — z.B. "direkt und ungeduldig", "sachlich und ruhig"]
+Weitere Erkenntnisse: [Antwort]
 
 ## 9. Argumentationsplanung (Schritt 9)
 [Antwort]
@@ -211,6 +217,6 @@ Erstellt: [Datum]
 ## Strategieempfehlung
 Verhandlungstyp: [distributiv / integrativ / gemischt]
 Begründung: [...]
-Empfohlener Gegnertyp: [...]
+Empfohlener Gegnertyp: [opponent_distributive / opponent_integrative]
 ZOPA-Einschätzung: [...]
 ```
