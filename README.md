@@ -76,17 +76,7 @@ negotiation-simulator/
 ## Voraussetzungen
 
 - [Claude Code](https://claude.ai/code) installiert und eingerichtet
-- Anthropic API Key (in `.env` konfiguriert)
 
-```bash
-cp .env.example .env
-# ANTHROPIC_API_KEY eintragen
-```
 
 ---
 
-## Theoretischer Rahmen
-
-- **Vorbereitung**: Lewicki et al. — *Negotiation* (10-Schritt-Planungsprozess, BATNA, ZOPA, Bargaining Mix)
-- **Gegnertypen**: Lewicki et al. — distributive vs. integrative Verhandlungsführung
-- **Feedback**: Fisher & Ury — *Getting to Yes* (Harvard-Prinzipien)
